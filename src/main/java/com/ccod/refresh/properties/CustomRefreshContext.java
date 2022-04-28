@@ -23,6 +23,9 @@ public class CustomRefreshContext {
 
     public static final String SOURCE_NAME = "CustomMadeEnvironmentPostProcessor_";
 
+    /**
+     * redis数据源key，hash结构
+     */
     public static final String REDIS_REFRESH_KEU = "spring:config:map";
 
     public static final String REFRESH_CONFIG_KEY_PREFIX = "ccod.custom";
@@ -35,10 +38,13 @@ public class CustomRefreshContext {
 
     public static void setCustomSourceProvideList(ConfigurableEnvironment environment) {
         CustomRefreshContext.customSourceProvideList = Lists.newArrayList();
-        String provideClassName = environment.getProperty(REFRESH_CONFIG_KEY_PREFIX + ".com.ccod.refresh.provide", DEFAULT_PROVIDE);
+        String provideClassName = environment.getProperty(REFRESH_CONFIG_KEY_PREFIX + ".refresh.provide", DEFAULT_PROVIDE);
+        String[] provideClassNames = provideClassName.split(",");
         try {
-            Constructor provideConstructor = ReflectionUtils.accessibleConstructor(Class.forName(provideClassName));
-            customSourceProvideList.add((CustomSourceProvide) provideConstructor.newInstance());
+            for (int i = 0; i < provideClassNames.length; i++) {
+                Constructor provideConstructor = ReflectionUtils.accessibleConstructor(Class.forName(provideClassNames[i]));
+                customSourceProvideList.add((CustomSourceProvide) provideConstructor.newInstance());
+            }
         } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException ex) {
             log.error("{} 初始化失败", provideClassName, ex);
             throw new BeanCreationException("资源加载器初始化失败 ");
@@ -52,4 +58,5 @@ public class CustomRefreshContext {
             }
         }
     }
+
 }

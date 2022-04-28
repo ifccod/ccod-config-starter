@@ -41,7 +41,7 @@ public class DefaultRedisSourceProvide implements CustomSourceProvide {
         }
         List<String> res = Lists.newArrayList();
         Map<String, Object> source = (Map) propertySource.getSource();
-        Map<String, String> redisSourceMap = getJedis().hgetAll(CustomRefreshContext.REDIS_REFRESH_KEU);
+        Map<String, Object> redisSourceMap = getSource();
         if (CollectionUtils.isEmpty(redisSourceMap)) {
             return null;
         }
