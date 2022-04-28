@@ -2,10 +2,16 @@
 
 #### 软件架构
 软件架构说明
+
 1.CustomMadeEnvironmentPostProcessor为切入点，加载自定义的远程数据源到spring environment当中
+
 2.CustomRefreshBeanPostProcessor在容器启动扫描bean带@value注解的解析字段元数据并加入待刷新缓存bean列表
+
+
 3.DoRefreshJob为自动刷新实现类，两秒执行一次，会调用资源加载器的customSourceProvide.refresh()方法获取需要变更的key列表，注：为了支持spring el表达式的解析功能，需要在refresh方法中把变更的字段信息重新写入environment当中
+
 4.本项目主要针对小型项目开发，为了不引入三方依赖，支持多远程数据源聚合，可自由扩展redis，mysql远程数据源
+
 5.刷新部分逻辑借鉴apollo，感兴趣可见https://gitee.com/apolloconfig/apollo?_from=gitee_search
 
 #### 安装教程
