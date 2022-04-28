@@ -30,7 +30,7 @@ public class CustomRefreshContext {
 
     public static final String REFRESH_CONFIG_KEY_PREFIX = "ccod.custom";
 
-    private static final String DEFAULT_PROVIDE = "com.sky.config.refresh.com.ccod.refresh.provide.impl.DefaultRedisSourceProvide";
+    private static final String DEFAULT_PROVIDE = "com.ccod.refresh.provide.impl.DefaultRedisSourceProvide";
 
     @Getter
     @Setter

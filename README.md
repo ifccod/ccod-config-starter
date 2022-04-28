@@ -18,6 +18,7 @@
 
 基于springboot项目
 install 本项目后，在自己项目中引入maven依赖
+为了避免依赖冲突，建议在最上层model引入依赖
 ```
 <dependency>
     <groupId>com.ccod.refresh</groupId>
