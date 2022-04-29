@@ -1,5 +1,6 @@
 package com.ccod.refresh.processor;
 
+import com.ccod.refresh.properties.ConfigConstant;
 import com.ccod.refresh.properties.CustomRefreshContext;
 import com.ccod.refresh.provide.CustomSourceProvide;
 import com.google.common.collect.Maps;
@@ -29,7 +30,7 @@ public class CustomMadeEnvironmentPostProcessor implements EnvironmentPostProces
             log.info("{} 已注册", CustomRefreshContext.SOURCE_NAME);
             return;
         }
-        String property = environment.getProperty(CustomRefreshContext.REFRESH_CONFIG_KEY_PREFIX + ".enable", "false");
+        String property = environment.getProperty(ConfigConstant.REFRESH_CONFIG_KEY_PREFIX + ".enable", "false");
         if (!"true".equals(property)) {
             log.info("自动刷新功能未开启");
             return;

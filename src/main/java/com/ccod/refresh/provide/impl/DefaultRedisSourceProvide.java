@@ -27,9 +27,14 @@ public class DefaultRedisSourceProvide implements CustomSourceProvide {
 
     private ConfigurableEnvironment environment;
 
+    /**
+     * redis数据源key，hash结构
+     */
+    public static final String REDIS_REFRESH_KEU = "spring:config:map";
+
     @Override
     public Map<String, Object> getSource() {
-        Map res = getJedis().hgetAll(CustomRefreshContext.REDIS_REFRESH_KEU);
+        Map res = getJedis().hgetAll(REDIS_REFRESH_KEU);
         return res;
     }
 
@@ -47,7 +52,7 @@ public class DefaultRedisSourceProvide implements CustomSourceProvide {
         }
         redisSourceMap.forEach((redisSourceKey, redisSourceValue) -> {
             Object sourceValue = source.get(redisSourceKey);
-            if (!Objects.equals(sourceValue, redisSourceValue)) {
+            if (!Objects.equals(sourceValue, redisSourceValue) && redisSourceValue != null) {
                 source.put(redisSourceKey, redisSourceValue);
                 res.add(redisSourceKey);
             }

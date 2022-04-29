@@ -5,6 +5,9 @@ import com.ccod.refresh.provide.CustomSourceProvide;
 import com.ccod.refresh.util.RefreshBeanUtil;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
@@ -17,7 +20,7 @@ import java.util.concurrent.TimeUnit;
  * @date 2022/3/3 6:55 PM
  **/
 @Slf4j
-public class DoRefreshJob {
+public class DoRefreshJob implements BeanFactoryPostProcessor {
 
     private ScheduledExecutorService service = Executors.newScheduledThreadPool(1);
 
@@ -54,5 +57,11 @@ public class DoRefreshJob {
     public void close() {
         service.shutdown();
         CustomRefreshContext.close();
+    }
+
+    @Override
+    public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
+        RefreshBeanUtil.beanFactory = beanFactory;
+        RefreshBeanUtil.typeConverter = beanFactory.getTypeConverter();
     }
 }

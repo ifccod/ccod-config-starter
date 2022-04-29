@@ -1,5 +1,6 @@
 package com.ccod.refresh.util;
 
+import lombok.Getter;
 import org.springframework.core.MethodParameter;
 
 import java.lang.ref.WeakReference;
@@ -14,6 +15,7 @@ public class SpringValue {
     private Field field;
     private WeakReference<Object> beanRef;
     private String beanName;
+    @Getter
     private String key;
     private String placeholder;
     private Class<?> targetType;

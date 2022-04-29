@@ -38,6 +38,21 @@ public class RefreshBeanUtil {
     private static Map<String, RefreshBO> valueMap = Maps.newConcurrentMap();
 
     /**
+     * 需要刷新的key信息缓存
+     * @param springValue
+     * @param key
+     */
+    public static void putSpringValue(SpringValue springValue) {
+        String key = springValue.getKey();
+        RefreshBO refreshBO = valueMap.get(key);
+        if (refreshBO == null) {
+            refreshBO = new RefreshBO();
+            RefreshBeanUtil.getValueMap().put(key, refreshBO);
+        }
+        refreshBO.getSpringValueList().add(springValue);
+    }
+
+    /**
      * 刷新
      *
      * @param key

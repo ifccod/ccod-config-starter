@@ -1,36 +1,24 @@
 package com.ccod.refresh.properties;
 
 import com.ccod.refresh.provide.CustomSourceProvide;
+import com.ccod.refresh.util.ReflectUtils;
 import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.ReflectionUtils;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 /**
  * @author ccod
- * @date 2022/4/28 11:14 AM
+ * @date 2022/4/28 11:14 AMw
  **/
 @Slf4j
 public class CustomRefreshContext {
 
-    public static final String SOURCE_NAME = "CustomMadeEnvironmentPostProcessor_";
-
-    /**
-     * redis数据源key，hash结构
-     */
-    public static final String REDIS_REFRESH_KEU = "spring:config:map";
-
-    public static final String REFRESH_CONFIG_KEY_PREFIX = "ccod.custom";
-
-    private static final String DEFAULT_PROVIDE = "com.ccod.refresh.provide.impl.DefaultRedisSourceProvide";
+    public static final String SOURCE_NAME = "CustomMadeEnvironmentValues_";
 
     @Getter
     @Setter
@@ -38,17 +26,8 @@ public class CustomRefreshContext {
 
     public static void setCustomSourceProvideList(ConfigurableEnvironment environment) {
         CustomRefreshContext.customSourceProvideList = Lists.newArrayList();
-        String provideClassName = environment.getProperty(REFRESH_CONFIG_KEY_PREFIX + ".refresh.provide", DEFAULT_PROVIDE);
-        String[] provideClassNames = provideClassName.split(",");
-        try {
-            for (int i = 0; i < provideClassNames.length; i++) {
-                Constructor provideConstructor = ReflectionUtils.accessibleConstructor(Class.forName(provideClassNames[i]));
-                customSourceProvideList.add((CustomSourceProvide) provideConstructor.newInstance());
-            }
-        } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException ex) {
-            log.error("{} 初始化失败", provideClassName, ex);
-            throw new BeanCreationException("资源加载器初始化失败 ");
-        }
+        String provideClassName = environment.getProperty(ConfigConstant.DEFAULT_PROVIDE_CLASS_NAME_KEY, ConfigConstant.DEFAULT_PROVIDE);
+        CustomRefreshContext.customSourceProvideList = ReflectUtils.newTargetList(provideClassName, CustomSourceProvide.class);
     }
 
     public static void close() {

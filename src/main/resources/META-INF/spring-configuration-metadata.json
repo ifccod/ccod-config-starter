@@ -1,0 +1,22 @@
+{
+  "properties": [
+    {
+      "name": "ccod.custom.enable",
+      "type": "java.lang.String",
+      "description": "是否开启自动刷新功能",
+      "defaultValue": "true"
+    },
+    {
+      "name": "ccod.custom.refresh.provide",
+      "type": "java.lang.String",
+      "description": "外部资源加载器,多个逗号隔开",
+      "defaultValue": "com.ccod.refresh.provide.impl.DefaultRedisSourceProvide"
+    },
+    {
+      "name": "ccod.custom.ann.parse",
+      "type": "java.lang.String",
+      "description": "spring注解解析器,多个逗号隔开",
+      "defaultValue": "com.ccod.refresh.parse.impl.SpringValueParse"
+    }
+  ]
+}
