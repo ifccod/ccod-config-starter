@@ -32,23 +32,23 @@ public interface CustomSourceProvide extends Cloneable {
      *
      * @return 需要刷新的集合
      */
-    default List<String> refresh(){
+    default List<String> refresh() {
         ConfigurableEnvironment environment = this.getEnvironment();
         PropertySource propertySource = environment.getPropertySources().get(CustomRefreshContext.SOURCE_NAME);
         if (propertySource == null) {
             return null;
         }
         List<String> res = Lists.newArrayList();
-        Map<String, Object> source = (Map) propertySource.getSource();
-        Map<String, Object> redisSourceMap = this.getSource();
-        if (CollectionUtils.isEmpty(redisSourceMap)) {
+        Map<String, Object> oldSource = (Map) propertySource.getSource();
+        Map<String, Object> sourceMap = this.getSource();
+        if (CollectionUtils.isEmpty(sourceMap)) {
             return null;
         }
-        redisSourceMap.forEach((redisSourceKey, redisSourceValue) -> {
-            Object sourceValue = source.get(redisSourceKey);
-            if (!Objects.equals(sourceValue, redisSourceValue) && redisSourceValue != null) {
-                source.put(redisSourceKey, redisSourceValue);
-                res.add(redisSourceKey);
+        sourceMap.forEach((sourceKey, sourceValue) -> {
+            Object oldValue = oldSource.get(sourceKey);
+            if (!Objects.equals(sourceValue, oldValue) && sourceValue != null) {
+                oldSource.put(sourceKey, sourceValue);
+                res.add(sourceKey);
             }
         });
         return res;
@@ -63,6 +63,7 @@ public interface CustomSourceProvide extends Cloneable {
 
     /**
      * 获取环境变量
+     *
      * @return
      */
     ConfigurableEnvironment getEnvironment();
