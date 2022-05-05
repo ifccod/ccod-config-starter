@@ -3,7 +3,8 @@ package com.ccod.refresh.util;
 import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.TypeConverter;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.util.CollectionUtils;
@@ -18,8 +19,9 @@ import java.util.Map;
  * @author ccod
  * @date 2022/4/28 4:10 PM
  **/
-@Slf4j
 public class RefreshBeanUtil {
+
+    private static final Log log = LogFactory.getLog(RefreshBeanUtil.class);
 
     public static PlaceholderHelper placeholderHelper = new PlaceholderHelper();
 
@@ -39,8 +41,8 @@ public class RefreshBeanUtil {
 
     /**
      * 需要刷新的key信息缓存
+     *
      * @param springValue
-     * @param key
      */
     public static void putSpringValue(SpringValue springValue) {
         String key = springValue.getKey();
@@ -71,7 +73,7 @@ public class RefreshBeanUtil {
         for (SpringValue springValue : springValueList) {
             Object newValue = resolvePropertyValue(springValue);
             springValue.update(newValue);
-            log.info("beanName:{},field:{}【@value('{}')】 配置修改  new:{}", springValue.getBeanName(), springValue.getField().getName(), springValue.getPlaceholder(), newValue);
+            log.info("beanName:[" + springValue.getBeanName() + "],field:[" + springValue.getField().getName() + "]【@value('" + springValue.getPlaceholder() + "')】 配置修改  new:[" + newValue + "]");
         }
     }
 
@@ -104,7 +106,7 @@ public class RefreshBeanUtil {
         try {
             return gson.fromJson(json, targetType);
         } catch (Throwable ex) {
-            log.error("Parsing json '{}' to type {} failed!", json, targetType, ex);
+            log.error("Parsing json '" + json + "' to type " + targetType + " failed!", ex);
             throw ex;
         }
     }

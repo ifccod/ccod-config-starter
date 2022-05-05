@@ -5,7 +5,6 @@ import com.ccod.refresh.properties.ConfigConstant;
 import com.ccod.refresh.util.ReflectUtils;
 import com.ccod.refresh.util.RefreshBeanUtil;
 import com.ccod.refresh.util.SpringValue;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.core.env.Environment;
@@ -19,7 +18,6 @@ import java.util.List;
  * @author ccod
  * @date 2022/4/28 4:05 PM
  **/
-@Slf4j
 public class CustomRefreshBeanPostProcessor implements BeanPostProcessor {
 
     private List<CustomAnnotationParse> customAnnotationParseList;

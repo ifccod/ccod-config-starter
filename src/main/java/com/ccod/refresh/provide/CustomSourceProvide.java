@@ -1,9 +1,14 @@
 package com.ccod.refresh.provide;
 
+import com.ccod.refresh.properties.CustomRefreshContext;
+import com.google.common.collect.Lists;
 import org.springframework.core.env.ConfigurableEnvironment;
+import org.springframework.core.env.PropertySource;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * 自定义属性值来源
@@ -27,7 +32,27 @@ public interface CustomSourceProvide extends Cloneable {
      *
      * @return 需要刷新的集合
      */
-    List<String> refresh();
+    default List<String> refresh(){
+        ConfigurableEnvironment environment = this.getEnvironment();
+        PropertySource propertySource = environment.getPropertySources().get(CustomRefreshContext.SOURCE_NAME);
+        if (propertySource == null) {
+            return null;
+        }
+        List<String> res = Lists.newArrayList();
+        Map<String, Object> source = (Map) propertySource.getSource();
+        Map<String, Object> redisSourceMap = this.getSource();
+        if (CollectionUtils.isEmpty(redisSourceMap)) {
+            return null;
+        }
+        redisSourceMap.forEach((redisSourceKey, redisSourceValue) -> {
+            Object sourceValue = source.get(redisSourceKey);
+            if (!Objects.equals(sourceValue, redisSourceValue) && redisSourceValue != null) {
+                source.put(redisSourceKey, redisSourceValue);
+                res.add(redisSourceKey);
+            }
+        });
+        return res;
+    }
 
     /**
      * 设置环境上下文
@@ -35,6 +60,12 @@ public interface CustomSourceProvide extends Cloneable {
      * @param environment
      */
     void setEnvironment(ConfigurableEnvironment environment);
+
+    /**
+     * 获取环境变量
+     * @return
+     */
+    ConfigurableEnvironment getEnvironment();
 
     /**
      * 关闭资源

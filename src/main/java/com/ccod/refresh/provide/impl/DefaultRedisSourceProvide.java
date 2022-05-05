@@ -1,19 +1,14 @@
 package com.ccod.refresh.provide.impl;
 
-import com.ccod.refresh.properties.CustomRefreshContext;
 import com.ccod.refresh.provide.CustomSourceProvide;
-import com.google.common.collect.Lists;
+import com.ccod.refresh.util.IoUtils;
 import org.springframework.core.env.ConfigurableEnvironment;
-import org.springframework.core.env.PropertySource;
-import org.springframework.util.CollectionUtils;
 import redis.clients.jedis.DefaultJedisClientConfig;
 import redis.clients.jedis.HostAndPort;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisClientConfig;
 
-import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * redis默认实现
@@ -39,28 +34,6 @@ public class DefaultRedisSourceProvide implements CustomSourceProvide {
     }
 
     @Override
-    public List<String> refresh() {
-        PropertySource propertySource = this.environment.getPropertySources().get(CustomRefreshContext.SOURCE_NAME);
-        if (propertySource == null) {
-            return null;
-        }
-        List<String> res = Lists.newArrayList();
-        Map<String, Object> source = (Map) propertySource.getSource();
-        Map<String, Object> redisSourceMap = getSource();
-        if (CollectionUtils.isEmpty(redisSourceMap)) {
-            return null;
-        }
-        redisSourceMap.forEach((redisSourceKey, redisSourceValue) -> {
-            Object sourceValue = source.get(redisSourceKey);
-            if (!Objects.equals(sourceValue, redisSourceValue) && redisSourceValue != null) {
-                source.put(redisSourceKey, redisSourceValue);
-                res.add(redisSourceKey);
-            }
-        });
-        return res;
-    }
-
-    @Override
     public void setEnvironment(ConfigurableEnvironment environment) {
         this.environment = environment;
     }
@@ -77,13 +50,7 @@ public class DefaultRedisSourceProvide implements CustomSourceProvide {
 
     @Override
     public void close() {
-        if (jedis != null) {
-            try {
-                jedis.close();
-            } catch (Exception e) {
-                // skip
-            }
-        }
+        IoUtils.close(jedis);
     }
 
     private Jedis getJedis() {
@@ -91,5 +58,10 @@ public class DefaultRedisSourceProvide implements CustomSourceProvide {
             this.init();
         }
         return this.jedis;
+    }
+
+    @Override
+    public ConfigurableEnvironment getEnvironment() {
+        return environment;
     }
 }

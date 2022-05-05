@@ -5,7 +5,6 @@ import com.ccod.refresh.util.ReflectUtils;
 import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.util.CollectionUtils;
 
@@ -15,7 +14,6 @@ import java.util.List;
  * @author ccod
  * @date 2022/4/28 11:14 AMw
  **/
-@Slf4j
 public class CustomRefreshContext {
 
     public static final String SOURCE_NAME = "CustomMadeEnvironmentValues_";

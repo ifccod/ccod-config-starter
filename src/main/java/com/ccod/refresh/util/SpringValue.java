@@ -15,7 +15,6 @@ public class SpringValue {
     private Field field;
     private WeakReference<Object> beanRef;
     private String beanName;
-    @Getter
     private String key;
     private String placeholder;
     private Class<?> targetType;
@@ -111,6 +110,14 @@ public class SpringValue {
 
     boolean isTargetBeanValid() {
         return beanRef.get() != null;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 
     @Override

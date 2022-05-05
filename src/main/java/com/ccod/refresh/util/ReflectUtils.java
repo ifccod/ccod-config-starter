@@ -1,7 +1,8 @@
 package com.ccod.refresh.util;
 
 import com.google.common.collect.Lists;
-import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.util.ReflectionUtils;
 
@@ -16,8 +17,9 @@ import java.util.List;
  * @author ccod
  * @date 2022/4/29 3:06 PM
  **/
-@Slf4j
 public class ReflectUtils {
+
+    private static final Log log = LogFactory.getLog(ReflectUtils.class);
 
     /**
      * 通过配置创建配置实现类列表
@@ -35,7 +37,7 @@ public class ReflectUtils {
                 Constructor targetConstructor = ReflectionUtils.accessibleConstructor(Class.forName(configList[i]));
                 res.add((T) targetConstructor.newInstance());
             } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException ex) {
-                log.error("{} 初始化失败", configList[i], ex);
+                log.error("[" + configList[i] + "] 初始化失败", ex);
                 throw new BeanCreationException("资源加载初始化失败 ");
             }
         }
